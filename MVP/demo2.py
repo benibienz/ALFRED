@@ -1,4 +1,4 @@
-""" Very simple binary input/action demo """
+""" More complex input/action demo """
 
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
@@ -9,7 +9,9 @@ warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 
 def gen_input():
     """ Generate input vector """
-    return np.random.randint(0, 2)
+    x = np.random.randint(1, 20, 4)
+    x[np.random.randint(0, 4)] = 0
+    return x
 
 
 if __name__ == '__main__':
@@ -25,14 +27,18 @@ if __name__ == '__main__':
             # predict action with and associated probability
             pred = clf.predict(np.array(x).reshape(1, -1))[0]
             probs = clf.predict_proba(np.array(x).reshape(1, -1))[0]
-            prob = 0.5 if len(probs) == 1 else probs[pred]
+            # print(probs)
+            try:
+                prob = probs[pred - 1]
+            except IndexError:
+                prob = 0.25
         except NotFittedError:
-            pred, prob = None, 0.5  # first round we have no predictions
+            pred, prob = None, 0.25  # first round we have no predictions
 
         print(f'Input:  {x}             Predicted action: {pred}  ({100 * prob:.0f}% probability)')
         y = int(input('Action: '))
 
         # append new input and action
-        observations.append([x])
+        observations.append(x)
         actions.append(y)
         clf.fit(observations, actions)
