@@ -1,0 +1,54 @@
+<!doctype html>
+<head>
+    <title>Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='uikit.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='uikit.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='uikit-icons.min.js') }}"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!--    script for showing database on python console-->
+    <script>
+        $(document).ready(function(){
+            $("#dumpData").click(function(){
+                $.get("{{ url_for('gui.dump_data') }}");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="center">
+        <h2>State (Randomly generated) </h2>
+        <form action="{{ url_for('gui.act', state=state, action=0) }}" method="post" id="makeAction">
+            <button id="s0" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', state=state, action=0) }}'" class="uk-button uk-button-default">{{ state[0] }}</button>
+            <button id="s1" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', state=state, action=1) }}'" class="uk-button uk-button-default">{{ state[1] }}</button>
+            <button id="s2" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', state=state, action=2) }}'" class="uk-button uk-button-default">{{ state[2] }}</button>
+            <button id="s3" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', state=state, action=3) }}'" class="uk-button uk-button-default">{{ state[3] }}</button>
+        </form>
+        <p> Make your own rule (e.g. always click the 0, always click the highest number etc.)</p>
+
+<!--        color changing scripts-->
+        <script>$("#s0, #s1, #s2, #s3").css("color","rgb(255, 255, 255)");</script>
+        <script>$("#s0").css("background","rgb({{ probabilities[0] * 255 }}, 0, 0)");</script>
+        <script>$("#s1").css("background","rgb({{ probabilities[1] * 255 }}, 0, 0)");</script>
+        <script>$("#s2").css("background","rgb({{ probabilities[2] * 255 }}, 0, 0)");</script>
+        <script>$("#s3").css("background","rgb({{ probabilities[3] * 255 }}, 0, 0)");</script>
+
+    </div>
+
+    <div class="center">
+        <h4>Debug information (this can be hidden later)</h4>
+        <p>Predicted action = {{ pred_action }} </p>
+        <p>Probabilities = {{ probabilities }} </p>
+<!--            This only works once per run - don't know why -->
+        <button id="dumpData">Print data to console</button>
+    </div>
+</body>
+
+
+
+

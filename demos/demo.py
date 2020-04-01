@@ -9,7 +9,6 @@ warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 
 def gen_input():
     """ Generate input vector """
-    return np.random.randint(0, 2)
 
 
 if __name__ == '__main__':
