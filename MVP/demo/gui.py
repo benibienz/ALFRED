@@ -1,35 +1,32 @@
 import numpy as np
 import pandas as pd
 from flask import Blueprint, request, redirect, url_for, flash, render_template, Response
-from .db import get_db
 from .expert import Expert
 
 bp = Blueprint('gui', __name__)
 model = Expert()
-states, actions = [], []
-
-
-def state_transform(state):
-    """ Transforms state array into string or vice versa """
-    if isinstance(state, str):
-        return np.array([int(s) for s in state])
-    else:
-        return str(state)[1:-1].replace(' ', '')
+states, actions, pred_hist, prob_hist = [], [], [], []
+main_html = 'gui/simple.html'
 
 
 @bp.route('/', methods=['GET', 'POST'])
 def main():
-    s, pred_a, probs = model.display_next_state()
-    return render_template('gui/main.html', state=state_transform(s), pred_action=pred_a, probabilities=probs)
+    if len(states) == len(actions):
+        s, pred_a, probs = model.display_next_state()
+        states.append(s)
+        pred_hist.append(pred_a)
+        prob_hist.append(probs)
+    else:
+        s, pred_a, probs = states[-1], pred_hist[-1], prob_hist[-1]
+
+    return render_template(main_html, state=s, pred_action=pred_a, probabilities=probs)
 
 
-@bp.route('/act/<state>/<int:action>', methods=['POST'])
-def act(state, action):
-    db = get_db()
-    db.execute('INSERT INTO history (state, action) VALUES (?, ?)', (state, action))
-    db.commit()
-    df = pd.read_sql_query('SELECT * FROM history', db)
-    model.train([state_transform(s) for s in df['state']], df['action'].values)
+@bp.route('/act/<int:action>', methods=['POST'])
+def act(action):
+    actions.append(action)
+    assert len(states) == len(actions), 'state action history mismatch'
+    model.train(states, actions)
     return redirect(url_for('gui.main'))
 
 

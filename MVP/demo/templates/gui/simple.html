@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block body %}
+    <h2>State (Randomly generated) </h2>
+    <form action="{{ url_for('gui.act', action=0) }}" method="post" id="makeAction">
+        <button id="s0" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', action=0) }}'" class="uk-button uk-button-default">{{ state[0] }}</button>
+        <button id="s1" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', action=1) }}'" class="uk-button uk-button-default">{{ state[1] }}</button>
+        <button id="s2" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', action=2) }}'" class="uk-button uk-button-default">{{ state[2] }}</button>
+        <button id="s3" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', action=3) }}'" class="uk-button uk-button-default">{{ state[3] }}</button>
+    </form>
+    <p> Make your own rule (e.g. always click the 0, always click the highest number etc.)</p>
+
+<!--        color changing scripts-->
+    <script>$("#s0, #s1, #s2, #s3").css("color","rgb(255, 255, 255)");</script>
+    <script>$("#s0").css("background","rgb({{ probabilities[0] * 255 }}, 0, 0)");</script>
+    <script>$("#s1").css("background","rgb({{ probabilities[1] * 255 }}, 0, 0)");</script>
+    <script>$("#s2").css("background","rgb({{ probabilities[2] * 255 }}, 0, 0)");</script>
+    <script>$("#s3").css("background","rgb({{ probabilities[3] * 255 }}, 0, 0)");</script>
+{% endblock %}
+
+{% block debug %}
+    <p>Predicted action = {{ pred_action }} </p>
+    <p>Probabilities = {{ probabilities }} </p>
+{% endblock %}
