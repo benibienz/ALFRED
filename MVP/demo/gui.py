@@ -1,12 +1,25 @@
-import numpy as np
-import pandas as pd
 from flask import Blueprint, request, redirect, url_for, flash, render_template, Response
-from .expert import Expert
+from .expert import Expert, transform_space_state, STATE_KEYS, STATE_TYPES
 
 bp = Blueprint('gui', __name__)
-model = Expert()
+model = Expert(state_type='space')
 states, actions, pred_hist, prob_hist = [], [], [], []
-main_html = 'gui/simple.html'
+main_html = 'gui/space.html'
+
+
+def format_space_state(state):
+    state_dict = transform_space_state(state)
+    formatted_state_list = []
+    print(state_dict)
+    for i, k in enumerate(STATE_KEYS):
+        if STATE_TYPES[i] == 'enum':
+            val_str = state_dict[k]
+        elif STATE_TYPES[i] == 'int':
+            val_str = f'{state_dict[k]:.0f}'
+        else:
+            val_str = f'{state_dict[k]:.1f}'
+        formatted_state_list.append((k, val_str))
+    return formatted_state_list
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -18,8 +31,8 @@ def main():
         prob_hist.append(probs)
     else:
         s, pred_a, probs = states[-1], pred_hist[-1], prob_hist[-1]
-
-    return render_template(main_html, state=s, pred_action=pred_a, probabilities=probs)
+    state_txt = format_space_state(s)
+    return render_template(main_html, state=state_txt, pred_action=pred_a, probabilities=probs)
 
 
 @bp.route('/act/<int:action>', methods=['POST'])
@@ -33,7 +46,7 @@ def act(action):
 @bp.route('/data', methods=['GET'])
 def dump_data():
     """ Prints data to console """
-    df = str(pd.read_sql_query('SELECT * FROM history', get_db()))
-    print(df)
-    return Response(df, status=200)
+    txt = f'States: {states}\nActions: {actions}'
+    print(txt)
+    return Response(txt, status=200)
 

@@ -8,7 +8,8 @@ warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 
 # Space state parameters
 ID_LIST = ['US', 'RUS', 'DEBRIS']
-STATE_KEYS = ['Velocity deviation', 'X', 'Y', 'Z', 'Missed pass count']
+STATE_KEYS = ['ID', 'Velocity deviation', 'X', 'Y', 'Z', 'Missed pass count']
+STATE_TYPES = ['enum', 'float', 'float', 'float', 'float', 'int']
 
 
 def gen_state():
@@ -20,11 +21,11 @@ def gen_state():
 
 def transform_space_state(state):
     if isinstance(state, dict):
-        arr = [ID_LIST.index(state['ID'])] + [state[k] for k in STATE_KEYS]
+        arr = [ID_LIST.index(state['ID'])] + [state[k] for k in STATE_KEYS[1:]]
         return np.array(arr)
     else:
         s_dict = {'ID': ID_LIST[int(state[0])]}
-        for i, k in enumerate(STATE_KEYS):
+        for i, k in enumerate(STATE_KEYS[1:]):
             s_dict[k] = state[i + 1]
         return s_dict
 
@@ -44,7 +45,7 @@ def gen_space_state():
 
 
 class Expert:
-    def __init__(self, state_type='spacew', max_n=100):
+    def __init__(self, state_type='space', max_n=1000):
         self.clf = GaussianNB()  # we are using a Gaussian Naive Bayes classifier for now
         self.max_N = max_n  # max number of steps
         self.N = 0  # current step
