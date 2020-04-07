@@ -12,7 +12,7 @@
         <button id="s0" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', env=env, action=0) }}'" class="uk-button uk-button-default">Do nothing</button>
         <button id="s1" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', env=env, action=1) }}'" class="uk-button uk-button-default">Investigate</button>
     </form>
-    <p> Make your own rule (e.g. always click the 0, always click the highest number etc.)</p>
+    <p> Make your own rule (e.g. always investigate Russian objects with velocity deviations above 0.5.)</p>
 
 <!--        color changing scripts-->
     <script>$("#s0, #s1").css("color","rgb(255, 255, 255)");</script>
