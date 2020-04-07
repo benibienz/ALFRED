@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
-    <h2>Space State (Randomly generated) </h2>
+    <h2>Space Object Info (randomly generated) </h2>
     <p><b>{{ state[0][0] }}</b>:&nbsp;<span class="uk-label">{{ state[0][1] }}</span></p>
     <p>
         {% for s in state[1:-1] %}
@@ -8,9 +8,9 @@
         {% endfor %}
     </p>
     <p><b>{{ state[-1][0] }}</b>:&nbsp;<span class="uk-label">{{ state[-1][1] }}</span></p>
-    <form action="{{ url_for('gui.act', action=0) }}" method="post" id="makeAction">
-        <button id="s0" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', action=0) }}'" class="uk-button uk-button-default">Do nothing</button>
-        <button id="s1" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', action=1) }}'" class="uk-button uk-button-default">Investigate</button>
+    <form action="" method="post" id="makeAction">
+        <button id="s0" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', env=env, action=0) }}'" class="uk-button uk-button-default">Do nothing</button>
+        <button id="s1" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', env=env, action=1) }}'" class="uk-button uk-button-default">Investigate</button>
     </form>
     <p> Make your own rule (e.g. always click the 0, always click the highest number etc.)</p>
 
@@ -18,9 +18,4 @@
     <script>$("#s0, #s1").css("color","rgb(255, 255, 255)");</script>
     <script>$("#s0").css("background","rgb({{ probabilities[0] * 255 }}, 0, 0)");</script>
     <script>$("#s1").css("background","rgb({{ probabilities[1] * 255 }}, 0, 0)");</script>
-{% endblock %}
-
-{% block debug %}
-    <p>Predicted action = {{ pred_action }} </p>
-    <p>Probabilities = {{ probabilities }} </p>
 {% endblock %}

@@ -57,6 +57,8 @@ class Expert:
             self.state_generator = gen_state
             self.action_size = 4
 
+        self.states, self.actions, self.pred_hist, self.prob_hist = [], [], [], []
+
     def display_next_state(self):
         if self.N == self.max_N:
             raise StopIteration('Max N reached')
@@ -75,18 +77,17 @@ class Expert:
         self.N += 1
         return state, pred_action, probs
 
-    def train(self, states, actions):
-        self.clf.fit(states, actions)
+    def train(self):
+        self.clf.fit(self.states, self.actions)
 
 
 if __name__ == '__main__':
 
     model = Expert()
-    states, actions = [], []
     for _ in range(model.max_N):
         s, pred, probs = model.display_next_state()
         print(f'Input:  {transform_space_state(s)}           Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
         a = int(input('Action: '))
-        states.append(s)
-        actions.append(a)
-        model.train(states, actions)
+        model.states.append(s)
+        model.actions.append(a)
+        model.train()

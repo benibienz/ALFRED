@@ -2,9 +2,8 @@ from flask import Blueprint, request, redirect, url_for, flash, render_template,
 from .expert import Expert, transform_space_state, STATE_KEYS, STATE_TYPES
 
 bp = Blueprint('gui', __name__)
-model = Expert(state_type='space')
-states, actions, pred_hist, prob_hist = [], [], [], []
-main_html = 'gui/space.html'
+models = {'simple': Expert(state_type='simple'),
+          'space': Expert(state_type='space')}
 
 
 def format_space_state(state):
@@ -22,31 +21,45 @@ def format_space_state(state):
     return formatted_state_list
 
 
-@bp.route('/', methods=['GET', 'POST'])
-def main():
-    if len(states) == len(actions):
-        s, pred_a, probs = model.display_next_state()
-        states.append(s)
-        pred_hist.append(pred_a)
-        prob_hist.append(probs)
+@bp.route('/', methods=['GET'])
+def landing():
+    return render_template('gui/landing.html')
+
+
+@bp.route('/<env>', methods=['GET', 'POST'])
+def main(env):
+    if env == 'space':
+        m = models['space']
+        template = 'gui/space.html'
     else:
-        s, pred_a, probs = states[-1], pred_hist[-1], prob_hist[-1]
-    state_txt = format_space_state(s)
-    return render_template(main_html, state=state_txt, pred_action=pred_a, probabilities=probs)
+        m = models['simple']
+        template = 'gui/simple.html'
+
+    if len(m.states) == len(m.actions):
+        s, pred_a, probs = m.display_next_state()
+        m.states.append(s)
+        m.pred_hist.append(pred_a)
+        m.prob_hist.append(probs)
+    else:
+        s, pred_a, probs = m.states[-1], m.pred_hist[-1], m.prob_hist[-1]
+    state_txt = format_space_state(s) if env == 'space' else s
+    return render_template(template, env=env, state=state_txt, pred_action=pred_a, probabilities=probs)
 
 
-@bp.route('/act/<int:action>', methods=['POST'])
-def act(action):
-    actions.append(action)
-    assert len(states) == len(actions), 'state action history mismatch'
-    model.train(states, actions)
-    return redirect(url_for('gui.main'))
+@bp.route('/act/<env>/<int:action>', methods=['POST'])
+def act(env, action):
+    m = models['space'] if env == 'space' else models['simple']
+    m.actions.append(action)
+    assert len(m.states) == len(m.actions), 'state action history mismatch'
+    m.train()
+    return redirect(url_for('gui.main', env=env))
 
 
-@bp.route('/data', methods=['GET'])
-def dump_data():
+@bp.route('/<env>/data', methods=['GET'])
+def dump_data(env):
     """ Prints data to console """
-    txt = f'States: {states}\nActions: {actions}'
+    m = models['space'] if env == 'space' else models['simple']
+    txt = f'States: {m.states}\nActions: {m.actions}'
     print(txt)
     return Response(txt, status=200)
 
