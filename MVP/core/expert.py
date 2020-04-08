@@ -50,6 +50,7 @@ class Expert:
         self.max_N = max_n  # max number of steps
         self.N = 0  # current step
 
+        self.state_type = state_type
         if state_type == 'space':
             self.state_generator = gen_space_state
             self.action_size = 2
@@ -79,6 +80,9 @@ class Expert:
 
     def train(self):
         self.clf.fit(self.states, self.actions)
+
+    def reset(self):
+        self.__init__(state_type=self.state_type, max_n=self.max_N)
 
 
 if __name__ == '__main__':

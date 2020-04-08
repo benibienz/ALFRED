@@ -16,6 +16,6 @@
 
 <!--        color changing scripts-->
     <script>$("#s0, #s1").css("color","rgb(255, 255, 255)");</script>
-    <script>$("#s0").css("background","rgb({{ probabilities[0] * 255 }}, 0, 0)");</script>
-    <script>$("#s1").css("background","rgb({{ probabilities[1] * 255 }}, 0, 0)");</script>
+    <script>$("#s0").css("background","rgb(0, {{ probabilities[0] * 200 }}, 0)");</script>
+    <script>$("#s1").css("background","rgb(0, {{ probabilities[1] * 200 }}, 0)");</script>
 {% endblock %}

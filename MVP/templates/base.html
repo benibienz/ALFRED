@@ -21,19 +21,19 @@
 </head>
 
 <body>
+    <nav><a href="{{ url_for('gui.landing') }}">Home</a></nav>
     <div class="center">
         {% block body %}{% endblock %}
     </div>
 
-    <div class="center">
-        <h4>Debug information (this can be hidden later)</h4>
-        {% block debug %}
-            <p>Predicted action = {{ pred_action }} </p>
-            <p>Probabilities = {{ probabilities }} </p>
-<!--            This only works once per run - don't know why -->
-        <button id="dumpData">Print data to console</button>
-        {% endblock %}
-    </div>
+<!--    <div class="center">-->
+<!--        <h4>Debug information (this can be hidden later)</h4>-->
+<!--        {% block debug %}-->
+<!--            <p>Predicted action = {{ pred_action }} </p>-->
+<!--            <p>Probabilities = {{ probabilities }} </p>-->
+<!--        <button id="dumpData">Print data to console</button>-->
+<!--        {% endblock %}-->
+<!--    </div>-->
 </body>
 
 

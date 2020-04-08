@@ -23,6 +23,8 @@ def format_space_state(state):
 
 @bp.route('/', methods=['GET'])
 def landing():
+    models['simple'].reset()
+    models['space'].reset()
     return render_template('gui/landing.html')
 
 

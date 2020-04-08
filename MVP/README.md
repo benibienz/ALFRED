@@ -1,15 +1,16 @@
-Requirements (run `pip install` for the ones you don't have):
-flask
-numpy
-sklearn
-
 To run:
-`cd` into MVP directory
-`sh launch_demo.sh`
+
+cd into D4D directory: `cd D4D`
+create virtual env: `python3 -m venv env`
+activate venv: `source env/bin/activate`
+cd into MVP directory `cd MVP`
+install requirements: `pip install -r requirements.txt`
+run: `python main.py`
+see the app on a browser: http://127.0.0.1:8080/
 Ctrl + C to stop
 
-I'm currently using two html documents: **base.html and simple.html**
+Jinja/HTML files are stored in **templates** and extend **base.html**
 The CSS styles are from UIkit and **static/style.css**
-All flask endpoints in **gui.py**
-Python backend (similar to demo2.py) in **expert.py**
+All flask endpoints in **core/gui.py**
+Python backend in **core/expert.py**
   
