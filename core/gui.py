@@ -1,7 +1,21 @@
+import os
+from pathlib import Path
 from flask import Blueprint, request, redirect, url_for, flash, render_template, Response, session
 from .recommender import Recommender, transform_space_state, STATE_KEYS, STATE_TYPES
 
 bp = Blueprint('gui', __name__)
+home_path = Path(__file__).parent
+
+
+def reset():
+    # clear images
+    tree_img = home_path.joinpath('static', 'images', 'tree_graph.png')
+    if os.path.isfile(tree_img):
+        os.remove(tree_img)
+
+    # init models
+    session['models'] = {'simple': Recommender(state_type='simple'),
+                         'space': Recommender(state_type='space')}
 
 
 def format_space_state(state):
@@ -20,13 +34,9 @@ def format_space_state(state):
 
 @bp.route('/', methods=['GET'])
 def landing():
-    if 'models' not in session:
-        session['models'] = {'simple': Recommender(state_type='simple'),
-                             'space': Recommender(state_type='space')}
-    else:
-        session['models']['simple'].reset()
-        session['models']['space'].reset()
-    return render_template('gui/landing.html')
+    reset()
+    # return render_template('gui/landing.html')
+    return redirect(url_for('gui.main', env='space'))
 
 
 @bp.route('/play/<env>', methods=['GET', 'POST'])
@@ -41,12 +51,13 @@ def main(env):
     if len(m.states) == len(m.actions):
         s, pred_a, probs = m.display_next_state()
         m.states.append(s)
-        m.pred_hist.append(pred_a)
-        m.prob_hist.append(probs)
+        m.pred_history.append(pred_a)
+        m.prob_history.append(probs)
     else:
         s, pred_a, probs = m.states[-1], m.pred_history[-1], m.prob_history[-1]
     state_txt = format_space_state(s) if env == 'space' else s
-    return render_template(template, env=env, state=state_txt, pred_action=pred_a, probabilities=probs)
+    return render_template(template, env=env, state=state_txt, pred_action=pred_a, probabilities=probs,
+                           N=m.N)
 
 
 @bp.route('/act/<env>/<int:action>', methods=['POST'])

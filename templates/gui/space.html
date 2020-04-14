@@ -21,5 +21,7 @@
 {% endblock %}
 
 {% block info %}
+    {% if N > 0 %}
     <img src="{{ url_for('static', filename='images/tree_graph.png') }}" alt="Decision Tree graph">
+    {% endif %}
 {% endblock %}
