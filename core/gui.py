@@ -1,9 +1,9 @@
 from flask import Blueprint, request, redirect, url_for, flash, render_template, Response
-from .expert import Expert, transform_space_state, STATE_KEYS, STATE_TYPES
+from .recommender import Recommender, transform_space_state, STATE_KEYS, STATE_TYPES
 
 bp = Blueprint('gui', __name__)
-models = {'simple': Expert(state_type='simple'),
-          'space': Expert(state_type='space')}
+models = {'simple': Recommender(state_type='simple'),
+          'space': Recommender(state_type='space')}
 
 
 def format_space_state(state):

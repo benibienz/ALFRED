@@ -1,8 +1,7 @@
 **To run:**
-* cd into D4D directory: `cd D4D`
+* cd into ALFRED directory: `cd ALFRED`
 * (optional) create virtual env: `python3 -m venv env`
 * (optional) activate venv: `source env/bin/activate`
-* cd into MVP directory `cd MVP`
 * install requirements: `pip install -r requirements.txt`
 * run: `python main.py`
 * see the app on a browser: http://127.0.0.1:8080/

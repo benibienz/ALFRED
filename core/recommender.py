@@ -44,7 +44,7 @@ def gen_space_state():
     return s
 
 
-class Expert:
+class Recommender:
     def __init__(self, state_type='space', max_n=1000):
         self.clf = GaussianNB()  # we are using a Gaussian Naive Bayes classifier for now
         self.max_N = max_n  # max number of steps
@@ -87,7 +87,7 @@ class Expert:
 
 if __name__ == '__main__':
 
-    model = Expert()
+    model = Recommender()
     for _ in range(model.max_N):
         s, pred, probs = model.display_next_state()
         print(f'Input:  {transform_space_state(s)}           Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
