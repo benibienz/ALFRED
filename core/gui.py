@@ -7,7 +7,6 @@ bp = Blueprint('gui', __name__)
 def format_space_state(state):
     state_dict = transform_space_state(state)
     formatted_state_list = []
-    print(state_dict)
     for i, k in enumerate(STATE_KEYS):
         if STATE_TYPES[i] == 'enum':
             val_str = state_dict[k]
@@ -30,7 +29,7 @@ def landing():
     return render_template('gui/landing.html')
 
 
-@bp.route('/<env>', methods=['GET', 'POST'])
+@bp.route('/play/<env>', methods=['GET', 'POST'])
 def main(env):
     if env == 'space':
         m = session['models']['space']
@@ -45,7 +44,7 @@ def main(env):
         m.pred_hist.append(pred_a)
         m.prob_hist.append(probs)
     else:
-        s, pred_a, probs = m.states[-1], m.pred_hist[-1], m.prob_hist[-1]
+        s, pred_a, probs = m.states[-1], m.pred_history[-1], m.prob_history[-1]
     state_txt = format_space_state(s) if env == 'space' else s
     return render_template(template, env=env, state=state_txt, pred_action=pred_a, probabilities=probs)
 

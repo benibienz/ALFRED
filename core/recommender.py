@@ -2,16 +2,18 @@ import numpy as np
 import numpy.random as rand
 import matplotlib.pyplot as plt
 from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.tree import DecisionTreeClassifier, plot_tree, export_graphviz
 from sklearn.exceptions import NotFittedError
 import warnings
 
+plt.switch_backend('Agg')  # stops weird shit from happening
 warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 
 # Space state parameters
 ID_LIST = ['US', 'RUS', 'DEBRIS']
 STATE_KEYS = ['ID', 'Velocity deviation', 'X', 'Y', 'Z', 'Missed pass count']
 STATE_TYPES = ['enum', 'float', 'float', 'float', 'float', 'int']
+ACTION_NAMES = ['Do Nothing', 'Investigate']
 
 
 def gen_state():
@@ -49,19 +51,21 @@ def gen_space_state():
 class Recommender:
     def __init__(self, state_type='space', clf_type='tree', max_n=1000):
 
-        self.clf = DecisionTreeClassifier() if clf_type == 'tree' else GaussianNB()
-        self.max_N = max_n  # max number of steps
-        self.N = 0  # current step
-
         self.state_type = state_type
         if state_type == 'space':
             self.state_generator = gen_space_state
             self.action_size = 2
+            self.clf_type = clf_type
         else:
             self.state_generator = gen_state
             self.action_size = 4
+            self.clf_type = 'nb'  # no trees for this state type
 
-        self.states, self.actions, self.pred_hist, self.prob_hist = [], [], [], []
+        self.clf = DecisionTreeClassifier() if clf_type == 'tree' else GaussianNB()
+        self.max_N = max_n  # max number of steps
+        self.N = 0  # current step
+
+        self.states, self.actions, self.pred_history, self.prob_history = [], [], [], []
 
     def display_next_state(self):
         if self.N == self.max_N:
@@ -83,9 +87,17 @@ class Recommender:
 
     def train(self):
         self.clf.fit(self.states, self.actions)
+        self.save_tree_graph()
 
     def reset(self):
-        self.__init__(state_type=self.state_type, max_n=self.max_N)
+        self.__init__(state_type=self.state_type, max_n=self.max_N, clf_type=self.clf_type)
+
+    def save_tree_graph(self):
+        export_graphviz(self.clf, out_file='graphs/tree_viz', class_names=ACTION_NAMES, feature_names=STATE_KEYS,
+                        precision=1, rounded=True, filled=True, impurity=False, label='none')
+        plot_tree(self.clf, class_names=ACTION_NAMES, feature_names=STATE_KEYS, precision=1,
+                  rounded=True, filled=True, impurity=False, label='none')
+        plt.savefig('graphs/tree_graph')
 
 
 if __name__ == '__main__':
@@ -99,5 +111,4 @@ if __name__ == '__main__':
         model.actions.append(a)
         model.train()
 
-    plot_tree(model.clf)
-    plt.show()
+    model.save_tree_graph()
