@@ -1,9 +1,7 @@
-from flask import Blueprint, request, redirect, url_for, flash, render_template, Response
+from flask import Blueprint, request, redirect, url_for, flash, render_template, Response, session
 from .recommender import Recommender, transform_space_state, STATE_KEYS, STATE_TYPES
 
 bp = Blueprint('gui', __name__)
-models = {'simple': Recommender(state_type='simple'),
-          'space': Recommender(state_type='space')}
 
 
 def format_space_state(state):
@@ -23,18 +21,22 @@ def format_space_state(state):
 
 @bp.route('/', methods=['GET'])
 def landing():
-    models['simple'].reset()
-    models['space'].reset()
+    if 'models' not in session:
+        session['models'] = {'simple': Recommender(state_type='simple'),
+                             'space': Recommender(state_type='space')}
+    else:
+        session['models']['simple'].reset()
+        session['models']['space'].reset()
     return render_template('gui/landing.html')
 
 
 @bp.route('/<env>', methods=['GET', 'POST'])
 def main(env):
     if env == 'space':
-        m = models['space']
+        m = session['models']['space']
         template = 'gui/space.html'
     else:
-        m = models['simple']
+        m = session['models']['simple']
         template = 'gui/simple.html'
 
     if len(m.states) == len(m.actions):
@@ -50,7 +52,7 @@ def main(env):
 
 @bp.route('/act/<env>/<int:action>', methods=['POST'])
 def act(env, action):
-    m = models['space'] if env == 'space' else models['simple']
+    m = session['models']['space'] if env == 'space' else session['models']['simple']
     m.actions.append(action)
     assert len(m.states) == len(m.actions), 'state action history mismatch'
     m.train()
@@ -60,7 +62,7 @@ def act(env, action):
 @bp.route('/<env>/data', methods=['GET'])
 def dump_data(env):
     """ Prints data to console """
-    m = models['space'] if env == 'space' else models['simple']
+    m = session['models']['space'] if env == 'space' else session['models']['simple']
     txt = f'States: {m.states}\nActions: {m.actions}'
     print(txt)
     return Response(txt, status=200)
