@@ -75,7 +75,6 @@ class Recommender:
             # predict action with an associated probability
             pred_action = self.clf.predict(np.array(state).reshape(1, -1))[0]
             probs = self.clf.predict_proba(np.array(state).reshape(1, -1))[0]
-            print(probs)
             if len(probs) < self.action_size:
                 probs = [1 / self.action_size] * self.action_size
 

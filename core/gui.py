@@ -77,3 +77,10 @@ def dump_data(env):
     print(txt)
     return Response(txt, status=200)
 
+
+@bp.route('/play/<env>/ajaxact', methods=['POST'])
+def ajax_test(env):
+    val = request.form['val']
+    print(env, val)
+    return Response('', status=200)
+

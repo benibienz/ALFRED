@@ -3,21 +3,18 @@
     <title>Demo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script> $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}; </script>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='uikit.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
     <script src="{{ url_for('static', filename='uikit.min.js') }}"></script>
     <script src="{{ url_for('static', filename='uikit-icons.min.js') }}"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-<!--    script for showing database on python console-->
-    <script>
-        $(document).ready(function(){
-            $("#dumpData").click(function(){
-                $.get("{{ url_for('gui.dump_data', env=env) }}");
-            });
-        });
-    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+
 </head>
 
 <body>
@@ -31,8 +28,8 @@
         {% block info %}
             <p>Predicted action = {{ pred_action }} </p>
             <p>Probabilities = {{ probabilities }} </p>
-        <button id="dumpData">Print data to console</button>
         {% endblock %}
+        <button id="dumpData">Print data to console</button>
     </div>
 </body>
 
