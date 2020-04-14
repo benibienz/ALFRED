@@ -26,14 +26,14 @@
         {% block body %}{% endblock %}
     </div>
 
-<!--    <div class="center">-->
-<!--        <h4>Debug information (this can be hidden later)</h4>-->
-<!--        {% block debug %}-->
-<!--            <p>Predicted action = {{ pred_action }} </p>-->
-<!--            <p>Probabilities = {{ probabilities }} </p>-->
-<!--        <button id="dumpData">Print data to console</button>-->
-<!--        {% endblock %}-->
-<!--    </div>-->
+    <div class="center">
+        <h4> Info </h4>
+        {% block info %}
+            <p>Predicted action = {{ pred_action }} </p>
+            <p>Probabilities = {{ probabilities }} </p>
+        <button id="dumpData">Print data to console</button>
+        {% endblock %}
+    </div>
 </body>
 
 

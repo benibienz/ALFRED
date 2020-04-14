@@ -93,11 +93,11 @@ class Recommender:
         self.__init__(state_type=self.state_type, max_n=self.max_N, clf_type=self.clf_type)
 
     def save_tree_graph(self):
-        export_graphviz(self.clf, out_file='graphs/tree_viz', class_names=ACTION_NAMES, feature_names=STATE_KEYS,
+        export_graphviz(self.clf, out_file='static/images/tree_viz', class_names=ACTION_NAMES, feature_names=STATE_KEYS,
                         precision=1, rounded=True, filled=True, impurity=False, label='none')
         plot_tree(self.clf, class_names=ACTION_NAMES, feature_names=STATE_KEYS, precision=1,
                   rounded=True, filled=True, impurity=False, label='none')
-        plt.savefig('graphs/tree_graph')
+        plt.savefig('static/images/tree_graph')
 
 
 if __name__ == '__main__':
