@@ -1,6 +1,8 @@
 import numpy as np
 import numpy.random as rand
+import matplotlib.pyplot as plt
 from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.exceptions import NotFittedError
 import warnings
 
@@ -45,8 +47,9 @@ def gen_space_state():
 
 
 class Recommender:
-    def __init__(self, state_type='space', max_n=1000):
-        self.clf = GaussianNB()  # we are using a Gaussian Naive Bayes classifier for now
+    def __init__(self, state_type='space', clf_type='tree', max_n=1000):
+
+        self.clf = DecisionTreeClassifier() if clf_type == 'tree' else GaussianNB()
         self.max_N = max_n  # max number of steps
         self.N = 0  # current step
 
@@ -87,11 +90,14 @@ class Recommender:
 
 if __name__ == '__main__':
 
-    model = Recommender()
+    model = Recommender(max_n=10, state_type='simple')
     for _ in range(model.max_N):
         s, pred, probs = model.display_next_state()
-        print(f'Input:  {transform_space_state(s)}           Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
+        print(f'Input:  {s}           Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
         a = int(input('Action: '))
         model.states.append(s)
         model.actions.append(a)
         model.train()
+
+    plot_tree(model.clf)
+    plt.show()
