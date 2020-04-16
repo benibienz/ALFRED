@@ -79,7 +79,8 @@ class Recommender:
                 probs = [1 / self.action_size] * self.action_size
 
         except NotFittedError:
-            pred_action, probs = 0, [1 / self.action_size] * self.action_size  # first round we have no predictions
+            # first round we have no predictions
+            pred_action, probs = 0, [1 / self.action_size] * self.action_size
 
         self.N += 1
         return state, pred_action, probs
@@ -92,8 +93,9 @@ class Recommender:
         self.__init__(state_type=self.state_type, max_n=self.max_N, clf_type=self.clf_type)
 
     def save_tree_graph(self):
-        export_graphviz(self.clf, out_file='static/images/tree_viz', class_names=ACTION_NAMES, feature_names=STATE_KEYS,
-                        precision=1, rounded=True, filled=True, impurity=False, label='none')
+        export_graphviz(self.clf, out_file='static/images/tree_viz', class_names=ACTION_NAMES,
+                        feature_names=STATE_KEYS, precision=1, rounded=True, filled=True,
+                        impurity=False, label='none')
         plot_tree(self.clf, class_names=ACTION_NAMES, feature_names=STATE_KEYS, precision=1,
                   rounded=True, filled=True, impurity=False, label='none')
         plt.savefig('static/images/tree_graph')
@@ -104,7 +106,8 @@ if __name__ == '__main__':
     model = Recommender(max_n=10, state_type='simple')
     for _ in range(model.max_N):
         s, pred, probs = model.display_next_state()
-        print(f'Input:  {s}           Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
+        print(f'Input:  {s}           '
+              f'Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
         a = int(input('Action: '))
         model.states.append(s)
         model.actions.append(a)
