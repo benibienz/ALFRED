@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script> $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}; </script>
+    <script> $ENV = "{{ env }}"; </script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='uikit.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -26,10 +27,7 @@
     <div class="center">
         <h4> Info </h4>
         {% block info %}
-            <p>Predicted action = {{ pred_action }} </p>
-            <p>Probabilities = {{ probabilities }} </p>
         {% endblock %}
-        <button id="dumpData">Print data to console</button>
     </div>
 </body>
 

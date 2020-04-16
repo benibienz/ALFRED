@@ -1,26 +1,23 @@
 {% extends 'base.html' %}
 {% block body %}
     <h2>Space Object Info (randomly generated) </h2>
-    <p><b>{{ state[0][0] }}</b>:&nbsp;<span class="uk-label">{{ state[0][1] }}</span></p>
+    <p><b>{{ state[0][0] }}</b>:&nbsp;<span id="state0" class="uk-label">{{ state[0][1] }}</span></p>
     <p>
         {% for s in state[1:-1] %}
-        <b>{{ s[0] }}</b>:&nbsp;<span class="uk-label">{{ s[1] }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <b>{{ s[0] }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s[1] }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         {% endfor %}
     </p>
-    <p><b>{{ state[-1][0] }}</b>:&nbsp;<span class="uk-label">{{ state[-1][1] }}</span></p>
-    <button class="Action" data-env="{{ env }}">Test</button>
-    <form action="" method="post" id="makeAction">
-        <button id="s0" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', env=env, action=0) }}'" class="uk-button uk-button-default">Do nothing</button>
-        <button id="s1" onclick="document.getElementById('makeAction').action='{{ url_for('gui.act', env=env, action=1) }}'" class="uk-button uk-button-default">Investigate</button>
-    </form>
+    <p><b>{{ state[-1][0] }}</b>:&nbsp;<span id="state{{ state|length - 1 }}" class="uk-label">{{ state[-1][1] }}</span></p>
+    <div>
+    {% for action in actions %}
+    <button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
+    {% endfor %}
+    </div>
+
     <p> Make your own rule (e.g. always investigate Russian objects with velocity deviations above 0.5.)</p>
-    <script>$("#s0, #s1").css("color","rgb(255, 255, 255)");</script>
-    <script>$("#s0").css("background","rgb(0, {{ probabilities[0] * 200 }}, 0)");</script>
-    <script>$("#s1").css("background","rgb(0, {{ probabilities[1] * 200 }}, 0)");</script>
 {% endblock %}
 
 {% block info %}
-    {% if N > 0 %}
-<!--    <img src="{{ url_for('static', filename='images/tree_graph.png') }}" alt="Decision Tree graph">-->
-    {% endif %}
+<!-- This is where I was experimenting with showing the tree image but it's not good -->
+<!-- <img src="{{ url_for('static', filename='images/tree_graph.png') }}" alt="Decision Tree graph">-->
 {% endblock %}

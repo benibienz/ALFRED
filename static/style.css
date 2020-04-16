@@ -16,3 +16,21 @@ body {
   border: 3px solid #73AD21;
   padding: 70px;
 }
+
+.action {
+  border: 4px solid white;
+  outline: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  background-color: green;
+  color: white;
+  border-radius: 30%;
+  transition-duration: 0.2s;
+}
+
+.action:hover {
+  border: 4px solid rgb(0, 255, 0);
+}

@@ -49,7 +49,7 @@ def gen_space_state():
 
 
 class Recommender:
-    def __init__(self, state_type='space', clf_type='tree', max_n=1000):
+    def __init__(self, state_type='space', clf_type='', max_n=1000):
 
         self.state_type = state_type
         if state_type == 'space':
@@ -67,7 +67,7 @@ class Recommender:
 
         self.states, self.actions, self.pred_history, self.prob_history = [], [], [], []
 
-    def display_next_state(self):
+    def step(self):
         if self.N == self.max_N:
             raise StopIteration('Max N reached')
         state = self.state_generator()
@@ -82,12 +82,22 @@ class Recommender:
             # first round we have no predictions
             pred_action, probs = 0, [1 / self.action_size] * self.action_size
 
+        # logs
         self.N += 1
+        self.states.append(state)
+        self.pred_history.append(pred_action)
+        self.prob_history.append(probs)
+
         return state, pred_action, probs
 
-    def train(self):
+    def train(self, action):
+        """ We train after every action """
+        self.actions.append(action)
+        assert len(self.states) == len(self.actions),\
+            'state-action mismatch - check calls to train() and step()'
         self.clf.fit(self.states, self.actions)
-        self.save_tree_graph()
+        if self.clf_type == 'tree':
+            self.save_tree_graph()
 
     def reset(self):
         self.__init__(state_type=self.state_type, max_n=self.max_N, clf_type=self.clf_type)
@@ -105,12 +115,8 @@ if __name__ == '__main__':
 
     model = Recommender(max_n=10, state_type='simple')
     for _ in range(model.max_N):
-        s, pred, probs = model.display_next_state()
+        s, pred, probs = model.step()
         print(f'Input:  {s}           '
               f'Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
         a = int(input('Action: '))
-        model.states.append(s)
-        model.actions.append(a)
-        model.train()
-
-    model.save_tree_graph()
+        model.train(a)
