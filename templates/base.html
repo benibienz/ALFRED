@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='uikit.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script src="{{ url_for('static', filename='uikit.min.js') }}"></script>
     <script src="{{ url_for('static', filename='uikit-icons.min.js') }}"></script>
 
@@ -19,16 +21,17 @@
 </head>
 
 <body>
-    <nav><a href="{{ url_for('gui.landing') }}">Home</a></nav>
     <div class="center">
+        <div class="menu">
+            <p>A.L.F.R.E.D.</p>
+            <button class="btn"><i class="fa fa-home"></i> Home</button>
+        </div>
         {% block body %}{% endblock %}
     </div>
 
-    <div class="center">
-        <h4> Info </h4>
-        {% block info %}
-        {% endblock %}
-    </div>
+    {% block info %}
+    {% endblock %}
+
 </body>
 
 

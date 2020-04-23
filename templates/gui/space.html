@@ -1,20 +1,22 @@
 {% extends 'base.html' %}
 {% block body %}
-    <h2>Space Object Info (randomly generated) </h2>
-    <p><b>{{ state[0][0] }}</b>:&nbsp;<span id="state0" class="uk-label">{{ state[0][1] }}</span></p>
-    <p>
-        {% for s in state[1:-1] %}
-        <b>{{ s[0] }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s[1] }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {% endfor %}
-    </p>
-    <p><b>{{ state[-1][0] }}</b>:&nbsp;<span id="state{{ state|length - 1 }}" class="uk-label">{{ state[-1][1] }}</span></p>
-    <div>
-    {% for action in actions %}
-    <button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
+<div class="state">
+<h3>Space Object Info</h3>
+<p><b>{{ state[0][0] }}</b>:&nbsp;<span id="state0" class="uk-label">{{ state[0][1] }}</span></p>
+<p>
+    {% for s in state[1:-1] %}
+    <b>{{ s[0] }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s[1] }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     {% endfor %}
-    </div>
+</p>
+<p><b>{{ state[-1][0] }}</b>:&nbsp;<span id="state{{ state|length - 1 }}" class="uk-label">{{ state[-1][1] }}</span></p>
+</div>
+<div>
+{% for action in actions %}
+<button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
+{% endfor %}
+</div>
 
-    <p> Make your own rule (e.g. always investigate Russian objects with velocity deviations above 0.5.)</p>
+<p> Make your own rule (e.g. always investigate Russian objects with velocity deviations above 0.5.)</p>
 {% endblock %}
 
 {% block info %}
