@@ -22,6 +22,10 @@ $(document).ready(function(){
 
 	});
 
+    $('#reset').click(function(env){
+        $.get("{{ url_for('gui.main') }}");
+    });
+
 
 
 });

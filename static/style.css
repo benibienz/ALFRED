@@ -37,9 +37,10 @@ body {
   overflow: auto;
 }
 
-.state {
+.inner {
   margin: auto;
-  width: 80%;
+  align-items: left;
+  width: 90%;
   border: 1px solid black;
   padding: 10px;
   background: var(--bg-color2);
@@ -74,6 +75,9 @@ body {
   cursor: pointer;
   border-radius: 30%;
   float: right;
+  margin: auto;
+  margin-left: 5px;
+  outline: none;
 }
 
 .btn:hover {
@@ -81,8 +85,9 @@ body {
 }
 
 .menu {
-  padding: 20px;
-  width: 80%;
+  padding: 10px;
+  width: 92%;
+  margin: auto;
 }
 
 #alfred{

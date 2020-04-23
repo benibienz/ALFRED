@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block body %}
-<div class="state">
+<div class="inner">
 <h3>Space Object Info</h3>
 {% for s in state %}
 <b>{{ s.name }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s.get_val_str() }}</span> <br />
 {% endfor %}
 
 </div>
-<div class="state">
+<div class="inner">
 {% for action in actions %}
 <button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
 {% endfor %}
