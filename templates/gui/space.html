@@ -1,19 +1,24 @@
 {% extends 'base.html' %}
 {% block body %}
 <div class="inner">
-<h3>Space Object Info</h3>
-{% for s in state %}
-<b>{{ s.name }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s.get_val_str() }}</span> <br />
-{% endfor %}
-
+    <div style="float: left;">
+    <h3>Space Object:</h3>
+    {% for s in state %}
+    <div class="stateVar">
+        <b>{{ s.name }}</b>:&nbsp;<span id="state{{ loop.index0 }}" class="uk-label">{{ s.get_val_str() }}</span>
+    </div>
+    {% endfor %}
+    </div>
+    <div style="margin: auto;">
+     <img id="img" src="" alt="object">
+        <script>updateImage("{{ state[1].get_val_str() }}");</script>
+    </div>
 </div>
-<div class="inner">
+<div id="actions">
 {% for action in actions %}
 <button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
 {% endfor %}
 </div>
-
-<p> Make your own rule (e.g. always investigate Russian objects with velocity deviations above 0.5.)</p>
 {% endblock %}
 
 {% block info %}

@@ -6,6 +6,7 @@
 
     <script> $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}; </script>
     <script> $ENV = "{{ env }}"; </script>
+    <script> $IMAGES = "{{ url_for('static', filename='images') }}"; </script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='uikit.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -23,7 +24,7 @@
 <body>
     <div class="center">
         <div class="menu">
-            <span id="alfred"> A.L.F.R.E.D. </span>
+            <span id="alfred"><b>A.L.F.R.E.D.</b></span>
             <a href="{{ url_for('gui.landing') }}">
                 <button id="home" class="btn"><i class="fa fa-home"></i> Home</button>
             </a>

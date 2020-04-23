@@ -12,13 +12,14 @@ html {
 }
 
 h2 {
-  margin-top: 0.2em;
+  margin: 0.2em;
   color: var(--font-color);
 }
 
 h3 {
-  margin-top: 0.2em;
-  color: var(--font-color);
+  margin: 0.2em;
+  color: hsl(0, 0%, 70%);
+  font-size: 24px;
 }
 
 body {
@@ -31,25 +32,39 @@ body {
   margin: auto;
   width: 100%;
   border: 3px solid black;
-  padding: 20px;
+  padding: 15px;
   background: var(--bg-color);
   border-radius: 10%;
   overflow: auto;
 }
 
 .inner {
+  display: flex;
+  justify-content: space-evenly;
   margin: auto;
-  align-items: left;
-  width: 90%;
+  width: 80%;
   border: 1px solid black;
   padding: 10px;
   background: var(--bg-color2);
   border-radius: 3%;
+  overflow: hidden;
+}
+
+.stateVar {
+  margin-left: 8px;
+  font-size: 20px;
+}
+
+#actions {
+  display: flex;
+  justify-content: space-evenly;
   overflow: auto;
+  margin: auto;
+  padding: 10px;
 }
 
 .action {
-  border: 4px solid white;
+  border: 3px solid hsl(0, 0%, 10%);
   outline: none;
   padding: 15px 32px;
   text-align: center;
@@ -63,7 +78,7 @@ body {
 }
 
 .action:hover {
-  border: 4px solid rgb(0, 255, 0);
+  border: 3px solid rgb(0, 255, 0);
 }
 
 .btn {
@@ -86,11 +101,18 @@ body {
 
 .menu {
   padding: 10px;
-  width: 92%;
+  width: 82%;
   margin: auto;
 }
 
-#alfred{
+#alfred {
   font-size: 26px;
+  font-family: helvetica;
+  letter-spacing: 0.1em;
 }
 
+#img {
+  width: 260px;
+  height:195px;
+  border-radius: 10%
+}

@@ -1,5 +1,11 @@
-$(document).ready(function(){
+function updateImage(key) {
+    var img_url = $IMAGES + '/sat.jpg';
+    if (key == 'DEBRIS') { img_url = $IMAGES + '/debris.jpg'; }
+    else if (key == 'UNKNOWN') { img_url = $IMAGES + '/unknown.png'; }
+    $('img').attr('src', img_url);
+}
 
+$(document).ready(function(){
     $('#dumpData').click(function(env){
         $.get("{{ url_for('gui.dump_data', env=env) }}");
     });
@@ -17,15 +23,13 @@ $(document).ready(function(){
                 $.each(data['probs'], function(k, p) {
                     $('#action' + k).css('background-color','rgb(0,' + 200 * p + ',0)');
                 })
+                // update image
+                updateImage(data['state'][1])
             }
             );
-
 	});
 
     $('#reset').click(function(env){
         $.get("{{ url_for('gui.main') }}");
     });
-
-
-
 });
