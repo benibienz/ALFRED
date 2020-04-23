@@ -10,10 +10,34 @@ plt.switch_backend('Agg')  # stops weird shit from happening
 warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 
 # Space state parameters
-ID_LIST = ['US', 'RUS', 'DEBRIS']
-STATE_KEYS = ['ID', 'Velocity deviation', 'X', 'Y', 'Z', 'Missed pass count']
-STATE_TYPES = ['enum', 'float', 'float', 'float', 'float', 'int']
-ACTION_NAMES = ['Do Nothing', 'Investigate']
+ID_LIST = ['US', 'RUS', 'EU']
+OBJECT_TYPE_LIST = ['DEBRIS', 'SATELLITE', 'UNKNOWN']
+STATE_KEYS = ['ID', 'Object type', 'Velocity deviation', 'Latitude', 'Longitude',
+              'Missed pass count']
+ACTION_KEYS = ['No Action', 'Track Object']
+
+
+class StateVar:
+    def __init__(self, name, val, group, kind='float', val_list=None):
+        self.name = name
+        self.val = val
+        self.group = group
+        self.kind = kind
+        self.val_list = val_list
+
+    def get_val(self):
+        if self.kind == 'enum':
+            return self.val_list.index(self.val)
+        else:
+            return self.val
+
+    def get_val_str(self):
+        if self.kind == 'enum':
+            return self.val
+        elif self.kind == 'int':
+            return f'{self.val:.0f}'
+        else:
+            return f'{self.val:.1f}'
 
 
 def gen_state():
@@ -23,28 +47,20 @@ def gen_state():
     return s
 
 
-def transform_space_state(state):
-    if isinstance(state, dict):
-        arr = [ID_LIST.index(state['ID'])] + [state[k] for k in STATE_KEYS[1:]]
-        return np.array(arr)
-    else:
-        s_dict = {'ID': ID_LIST[int(state[0])]}
-        for i, k in enumerate(STATE_KEYS[1:]):
-            s_dict[k] = state[i + 1]
-        return s_dict
+def state2vec(state):
+    return np.array([v.get_val() for v in state])
 
 
 def gen_space_state():
     """ Generate random space state """
-    s_dict = {
-        'ID': rand.choice(ID_LIST),
-        'Velocity deviation': abs(rand.normal()),
-        'X': rand.uniform(0, 100),
-        'Y': rand.uniform(0, 10),
-        'Z': rand.uniform(0, 100),
-        'Missed pass count': rand.choice([0, 0, 0, 0, 1, 1, 2])
-    }
-    s = transform_space_state(s_dict)
+    s = [
+        StateVar('ID', rand.choice(ID_LIST), group=0, kind='enum', val_list=ID_LIST),
+        StateVar('Object type', rand.choice(OBJECT_TYPE_LIST), group=0, kind='enum', val_list=OBJECT_TYPE_LIST),
+        StateVar('Velocity deviation', abs(rand.normal()), group=1),
+        StateVar('Latitude', rand.uniform(35, 45), group=2),
+        StateVar('Longitude', rand.uniform(100, 120), group=2),
+        StateVar('Missed pass count', rand.choice([0, 1, 2], p=[0.6, 0.3, 0.1]), group=3),
+    ]
     return s
 
 
@@ -71,10 +87,11 @@ class Recommender:
         if self.N == self.max_N:
             raise StopIteration('Max N reached')
         state = self.state_generator()
+        state_vec = state2vec(state)
         try:
             # predict action with an associated probability
-            pred_action = self.clf.predict(np.array(state).reshape(1, -1))[0]
-            probs = self.clf.predict_proba(np.array(state).reshape(1, -1))[0]
+            pred_action = self.clf.predict(np.array(state_vec).reshape(1, -1))[0]
+            probs = self.clf.predict_proba(np.array(state_vec).reshape(1, -1))[0]
             if len(probs) < self.action_size:
                 probs = [1 / self.action_size] * self.action_size
 
@@ -84,7 +101,7 @@ class Recommender:
 
         # logs
         self.N += 1
-        self.states.append(state)
+        self.states.append(state_vec)
         self.pred_history.append(pred_action)
         self.prob_history.append(probs)
 
@@ -103,17 +120,17 @@ class Recommender:
         self.__init__(state_type=self.state_type, max_n=self.max_N, clf_type=self.clf_type)
 
     def save_tree_graph(self):
-        export_graphviz(self.clf, out_file='static/images/tree_viz', class_names=ACTION_NAMES,
+        export_graphviz(self.clf, out_file='static/images/tree_viz', class_names=ACTION_KEYS,
                         feature_names=STATE_KEYS, precision=1, rounded=True, filled=True,
                         impurity=False, label='none')
-        plot_tree(self.clf, class_names=ACTION_NAMES, feature_names=STATE_KEYS, precision=1,
+        plot_tree(self.clf, class_names=ACTION_KEYS, feature_names=STATE_KEYS, precision=1,
                   rounded=True, filled=True, impurity=False, label='none')
         plt.savefig('static/images/tree_graph')
 
 
 if __name__ == '__main__':
 
-    model = Recommender(max_n=10, state_type='simple')
+    model = Recommender(max_n=10, state_type='space')
     for _ in range(model.max_N):
         s, pred, probs = model.step()
         print(f'Input:  {s}           '

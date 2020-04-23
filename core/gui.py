@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from flask import Blueprint, request, redirect, url_for, render_template, Response, session, jsonify
-from .recommender import Recommender, transform_space_state, STATE_KEYS, STATE_TYPES, ACTION_NAMES
+from .recommender import Recommender, STATE_KEYS, ACTION_KEYS
 
 bp = Blueprint('gui', __name__)
 home_path = Path(__file__).parent
@@ -23,21 +23,11 @@ def format_space_state(state):
     """
     Formats space state for html template
     Args:
-        state: numerical state array from model
+        state: list of StatVars
 
     Returns: list of formatted strings
     """
-    state_dict = transform_space_state(state)
-    formatted_state_list = []
-    for i, k in enumerate(STATE_KEYS):
-        if STATE_TYPES[i] == 'enum':
-            val_str = state_dict[k]
-        elif STATE_TYPES[i] == 'int':
-            val_str = f'{state_dict[k]:.0f}'
-        else:
-            val_str = f'{state_dict[k]:.1f}'
-        formatted_state_list.append((k, val_str))
-    return formatted_state_list
+    return [v.get_val_str() for v in state]
 
 
 def format_probs(probs):
@@ -75,8 +65,7 @@ def main(env):
         template = 'gui/simple.html'
 
     s, pred_a, probs = m.step()
-    state_txt = format_space_state(s) if env == 'space' else s
-    return render_template(template, env=env, state=state_txt, actions=ACTION_NAMES)
+    return render_template(template, env=env, state=s, actions=ACTION_KEYS)
 
 
 @bp.route('/act', methods=['POST'])

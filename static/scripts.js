@@ -7,11 +7,11 @@ $(document).ready(function(){
     $('.action').click(function(){
         $.post(
             $SCRIPT_ROOT + '/act',  // endpoint
-            {'action': $(this).attr('id'), 'env': $ENV},  // form to post
-            function(data, status){
+            {'action': $(this).attr('id'), 'env': $ENV},  // POST action
+            function(data, status){  // callback
                 // update state
                 $.each(data['state'], function(k, s) {
-                    $('#state' + k).text(s[1]);
+                    $('#state' + k).text(s);
                 })
                 // update action colors
                 $.each(data['probs'], function(k, p) {

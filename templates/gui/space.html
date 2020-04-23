@@ -2,15 +2,12 @@
 {% block body %}
 <div class="state">
 <h3>Space Object Info</h3>
-<p><b>{{ state[0][0] }}</b>:&nbsp;<span id="state0" class="uk-label">{{ state[0][1] }}</span></p>
-<p>
-    {% for s in state[1:-1] %}
-    <b>{{ s[0] }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s[1] }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    {% endfor %}
-</p>
-<p><b>{{ state[-1][0] }}</b>:&nbsp;<span id="state{{ state|length - 1 }}" class="uk-label">{{ state[-1][1] }}</span></p>
+{% for s in state %}
+<b>{{ s.name }}</b>:&nbsp;<span id="state{{ loop.index }}" class="uk-label">{{ s.get_val_str() }}</span> <br />
+{% endfor %}
+
 </div>
-<div>
+<div class="state">
 {% for action in actions %}
 <button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
 {% endfor %}
