@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from flask import Blueprint, request, redirect, url_for, render_template, Response, session, jsonify
-from .recommender import Recommender, STATE_KEYS, ACTION_KEYS
+from .recommender import Recommender, ACTION_KEYS
 
 bp = Blueprint('gui', __name__)
 home_path = Path(__file__).parent
