@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block body %}
+
 <div class="inner">
-    <div style="float: left;">
+<div style="float: left;">
     <h3>Space Object:</h3>
     {% for s in state %}
     <div class="stateVar">
@@ -12,9 +13,10 @@
     <div style="margin: auto;">
      <img id="img" src="" alt="object">
         <script>updateImage("{{ state[1].get_val_str() }}");</script>
-    </div>
 </div>
-<div id="actions">
+</div>
+
+<div class="actions">
 {% for action in actions %}
 <button id="action{{ loop.index0 }}" class="action">{{ action }}</button>
 {% endfor %}

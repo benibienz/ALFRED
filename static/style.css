@@ -55,7 +55,7 @@ body {
   font-size: 20px;
 }
 
-#actions {
+.actions {
   display: flex;
   justify-content: space-evenly;
   overflow: auto;
@@ -89,10 +89,13 @@ body {
   font-size: 16px;
   cursor: pointer;
   border-radius: 30%;
-  float: right;
   margin: auto;
   margin-left: 5px;
   outline: none;
+}
+
+.btn.right {
+  float: right;
 }
 
 .btn:hover {
@@ -106,9 +109,10 @@ body {
 }
 
 #alfred {
-  font-size: 26px;
+  font-size: 30px;
   font-family: helvetica;
   letter-spacing: 0.1em;
+  margin-left: 5px;
 }
 
 #img {

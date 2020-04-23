@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 {% block body %}
-    <p><b>Choose which demo to play</b></p>
-    <form action="" method="post" id="chooseEnv">
-        <button onclick="document.getElementById('chooseEnv').action='/play/simple'" class="uk-button uk-button-default">Simple numbers demo</button>
-        <button onclick="document.getElementById('chooseEnv').action='/play/space'" class="uk-button uk-button-default">Space demo</button>
+<div class="inner">
+    <div>
+    <p>
+        This is a simple demo of the A.L.F.R.E.D. system. <br>
+        You are presented with information about a series of space objects. <br>
+        For each object, decide whether to investigate it or not. <br>
+        You can make up your own rule (e.g. only investigate unkown objects. <br>
+        ALFRED will try to learn your rule and recommend actions by highlighting them in green.
+    </p>
+    </div>
+</div>
+    <div class="actions">
+    <form action="{{ url_for('gui.main', env='space') }}" method="get" id="chooseEnv">
+        <button class="btn">Go</button>
     </form>
+    </div>
 {% endblock %}
 
 {% block debug %}{% endblock %}

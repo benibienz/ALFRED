@@ -26,10 +26,10 @@
         <div class="menu">
             <span id="alfred"><b>A.L.F.R.E.D.</b></span>
             <a href="{{ url_for('gui.landing') }}">
-                <button id="home" class="btn"><i class="fa fa-home"></i> Home</button>
+                <button id="home" class="btn right"><i class="fa fa-home"></i> Home</button>
             </a>
             <a href="{{ url_for('gui.main', env=env) }}">
-                <button id="reset" class="btn"><i class="fa fa-repeat"></i> Reset</button>
+                <button id="reset" class="btn right"><i class="fa fa-repeat"></i> Reset</button>
             </a>
         </div>
         {% block body %}{% endblock %}

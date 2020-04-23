@@ -43,10 +43,9 @@ def format_probs(probs):
 
 @bp.route('/', methods=['GET'])
 def landing():
-    # rerouting this to space demo for now
-    # reset()
-    # return render_template('gui/landing.html')
-    return redirect(url_for('gui.main', env='space'))
+    reset()
+    return render_template('gui/landing.html')
+    # return redirect(url_for('gui.main', env='space'))
 
 
 @bp.route('/play/<env>', methods=['GET'])
