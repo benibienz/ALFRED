@@ -6,9 +6,6 @@ function updateImage(key) {
 }
 
 $(document).ready(function(){
-    $('#dumpData').click(function(env){
-        $.get("{{ url_for('gui.dump_data', env=env) }}");
-    });
 
     $('.action').click(function(){
         $.post(

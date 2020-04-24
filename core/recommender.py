@@ -18,10 +18,9 @@ ACTION_KEYS = ['No Action', 'Track Object']
 
 
 class StateVar:
-    def __init__(self, name, val, group, kind='float', val_list=None):
+    def __init__(self, name, val, kind='float', val_list=None):
         self.name = name
         self.val = val
-        self.group = group
         self.kind = kind
         self.val_list = val_list
 
@@ -54,12 +53,12 @@ def state2vec(state):
 def gen_space_state():
     """ Generate random space state """
     s = [
-        StateVar('ID', rand.choice(ID_LIST), group=0, kind='enum', val_list=ID_LIST),
-        StateVar('Object type', rand.choice(OBJECT_TYPE_LIST), group=0, kind='enum', val_list=OBJECT_TYPE_LIST),
-        StateVar('Velocity deviation', abs(rand.normal()), group=1),
-        StateVar('Latitude', rand.uniform(35, 45), group=2),
-        StateVar('Longitude', rand.uniform(100, 120), group=2),
-        StateVar('Missed pass count', rand.choice([0, 1, 2], p=[0.6, 0.3, 0.1]), group=3),
+        StateVar('ID', rand.choice(ID_LIST), kind='enum', val_list=ID_LIST),
+        StateVar('Object type', rand.choice(OBJECT_TYPE_LIST), kind='enum', val_list=OBJECT_TYPE_LIST),
+        StateVar('Velocity deviation', abs(rand.normal())),
+        StateVar('Latitude', rand.uniform(35, 45)),
+        StateVar('Longitude', rand.uniform(100, 120)),
+        StateVar('Missed pass count', rand.choice([0, 1, 2], p=[0.6, 0.3, 0.1]), kind='int'),
     ]
     return s
 

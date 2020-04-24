@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from flask import Blueprint, request, redirect, url_for, render_template, Response, session, jsonify
+from flask import Blueprint, request, render_template, session, jsonify
 from .recommender import Recommender, ACTION_KEYS
 
 bp = Blueprint('gui', __name__)
@@ -45,7 +45,6 @@ def format_probs(probs):
 def landing():
     reset()
     return render_template('gui/landing.html')
-    # return redirect(url_for('gui.main', env='space'))
 
 
 @bp.route('/play/<env>', methods=['GET'])

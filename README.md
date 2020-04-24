@@ -4,6 +4,7 @@
 1) (optional) activate venv: `source env/bin/activate`
 1) install requirements: `pip install -r requirements.txt`
 1) run: `python main.py`
+1) (run as background process): `nohup python main.py &`
 1) see the app on a browser: http://127.0.0.1:8080/
 1) Ctrl + C to stop
 
