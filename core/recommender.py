@@ -6,15 +6,16 @@ from sklearn.tree import DecisionTreeClassifier, plot_tree, export_graphviz
 from sklearn.exceptions import NotFittedError
 import warnings
 
-plt.switch_backend('Agg')  # stops weird shit from happening
+plt.switch_backend('Agg')  # stop matplotlib ruining everything
 warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 
 # Space state parameters
-ID_LIST = ['US', 'RUS', 'EU']
+ID_LIST = ['US', 'RUS', 'EU', 'UNKNOWN']
 OBJECT_TYPE_LIST = ['DEBRIS', 'SATELLITE', 'UNKNOWN']
 STATE_KEYS = ['ID', 'Object type', 'Velocity deviation', 'Latitude', 'Longitude',
               'Missed pass count']
-ACTION_KEYS = ['No Action', 'Track Object']
+STATE_KEYS += ['Year first seen']
+ACTION_KEYS = ['No Action', 'Track Object', 'Alert']
 
 
 class StateVar:
@@ -52,13 +53,17 @@ def state2vec(state):
 
 def gen_space_state():
     """ Generate random space state """
+    s_id = StateVar('ID', rand.choice(ID_LIST), kind='enum', val_list=ID_LIST)
+    s_type_choice = 'UNKNOWN' if s_id.get_val_str() == 'UNKNOWN' else rand.choice(OBJECT_TYPE_LIST[:-1])
+    s_type = StateVar('Object type', s_type_choice, kind='enum', val_list=OBJECT_TYPE_LIST)
     s = [
-        StateVar('ID', rand.choice(ID_LIST), kind='enum', val_list=ID_LIST),
-        StateVar('Object type', rand.choice(OBJECT_TYPE_LIST), kind='enum', val_list=OBJECT_TYPE_LIST),
+        s_id,
+        s_type,
         StateVar('Velocity deviation', abs(rand.normal())),
         StateVar('Latitude', rand.uniform(35, 45)),
         StateVar('Longitude', rand.uniform(100, 120)),
         StateVar('Missed pass count', rand.choice([0, 1, 2], p=[0.6, 0.3, 0.1]), kind='int'),
+        StateVar('Year first seen', rand.randint(1980, 2020), kind='int'),
     ]
     return s
 

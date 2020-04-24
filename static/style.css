@@ -43,7 +43,7 @@ body {
   justify-content: space-evenly;
   margin: auto;
   width: 80%;
-  border: 1px solid black;
+  border: 2px solid black;
   padding: 10px;
   background: var(--bg-color2);
   border-radius: 3%;
@@ -118,5 +118,6 @@ body {
 #img {
   width: 260px;
   height:195px;
+  border: 2px solid black;
   border-radius: 10%
 }

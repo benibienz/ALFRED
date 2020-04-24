@@ -3,7 +3,7 @@
 
 <div class="inner">
 <div style="float: left;">
-    <h3>Space Object:</h3>
+    <h3>Space Object</h3>
     {% for s in state %}
     <div class="stateVar">
         <b>{{ s.name }}</b>:&nbsp;<span id="state{{ loop.index0 }}" class="uk-label">{{ s.get_val_str() }}</span>
@@ -24,6 +24,4 @@
 {% endblock %}
 
 {% block info %}
-<!-- This is where I was experimenting with showing the tree image but it's not good -->
-<!-- <img src="{{ url_for('static', filename='images/tree_graph.png') }}" alt="Decision Tree graph">-->
 {% endblock %}
