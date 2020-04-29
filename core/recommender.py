@@ -18,7 +18,28 @@ ACTION_KEYS = ['No Action', 'Track Object', 'Alert']
 
 
 class StateVar:
+    """
+    Object for defining a state variable. State variables have string names
+    for users and numerical values for computers. This class allows us to
+    arbitrarily add new state variables and define rules for UI formatting.
+        get_val() returns numerical value
+        get_val_str() returns formatted string of numerical value
+        the 'name' attribute stores the name of the variable
+    For example:
+          x_pos = StateVar(name='X position', val=50.54)
+          x_pos.get_val()  >>>> 50.54
+          x_pos.get_val_str()  >>>> 50.5
+          x_pos.name  >>>> 'X position'
+    """
     def __init__(self, name, val, kind='float', val_list=None):
+        """
+        Args:
+            name: variable name
+            val: variable value (for enum this is the category name string)
+            kind: 'float', 'int' or 'enum'
+            val_list: if kind is 'enum', list of enumerated categories
+                e.g. ['DOG', 'CAT', 'MOUSE']
+        """
         self.name = name
         self.val = val
         self.kind = kind
@@ -39,14 +60,14 @@ class StateVar:
             return f'{self.val:.1f}'
 
 
-def gen_state():
-    """ Generate random state """
-    s = rand.randint(1, 9, 4)
-    s[rand.randint(0, 4)] = 0
-    return s
-
-
 def state2vec(state):
+    """
+    Convert state list to array of values for Recommender input.
+    Args:
+        state: list of StateVars
+    Returns:
+        numpy array
+    """
     return np.array([v.get_val() for v in state])
 
 
@@ -68,6 +89,11 @@ def gen_space_state():
 
 
 class Recommender:
+    """
+    Supervised learning recommender system for demo use.
+    Call step() to randomly generate next state and train(action) to
+    log action and train model.
+    """
     def __init__(self, state_type='space', clf_type='', max_n=1000):
 
         self.state_type = state_type
@@ -75,10 +101,6 @@ class Recommender:
             self.state_generator = gen_space_state
             self.action_size = 2
             self.clf_type = clf_type
-        else:
-            self.state_generator = gen_state
-            self.action_size = 4
-            self.clf_type = 'nb'  # no trees for this state type
 
         self.clf = DecisionTreeClassifier() if clf_type == 'tree' else GaussianNB()
         self.max_N = max_n  # max number of steps
@@ -87,6 +109,11 @@ class Recommender:
         self.states, self.actions, self.pred_history, self.prob_history = [], [], [], []
 
     def step(self):
+        """
+        Generate next state and action predictions
+        Returns:
+            state, predicted action, predicted action probabilities
+        """
         if self.N == self.max_N:
             raise StopIteration('Max N reached')
         state = self.state_generator()
@@ -97,7 +124,6 @@ class Recommender:
             probs = self.clf.predict_proba(np.array(state_vec).reshape(1, -1))[0]
             if len(probs) < self.action_size:
                 probs = [1 / self.action_size] * self.action_size
-
         except NotFittedError:
             # first round we have no predictions
             pred_action, probs = 0, [1 / self.action_size] * self.action_size
@@ -111,10 +137,18 @@ class Recommender:
         return state, pred_action, probs
 
     def train(self, action):
-        """ We train after every action """
+        """
+        Train after every action.
+        Args:
+            action: index of action in ACTION_KEYS
+        """
         self.actions.append(action)
         assert len(self.states) == len(self.actions),\
             'state-action mismatch - check calls to train() and step()'
+
+        # Note: this is training on the whole dataset after every action
+        # This is OK for a simple demo but should use incremental training
+        # or a subset of the most recent data points in practice
         self.clf.fit(self.states, self.actions)
         if self.clf_type == 'tree':
             self.save_tree_graph()
@@ -123,20 +157,10 @@ class Recommender:
         self.__init__(state_type=self.state_type, max_n=self.max_N, clf_type=self.clf_type)
 
     def save_tree_graph(self):
+        """ Save decision tree graph to various files. This could be implemented in the UI """
         export_graphviz(self.clf, out_file='static/images/tree_viz', class_names=ACTION_KEYS,
                         feature_names=STATE_KEYS, precision=1, rounded=True, filled=True,
                         impurity=False, label='none')
         plot_tree(self.clf, class_names=ACTION_KEYS, feature_names=STATE_KEYS, precision=1,
                   rounded=True, filled=True, impurity=False, label='none')
         plt.savefig('static/images/tree_graph')
-
-
-if __name__ == '__main__':
-
-    model = Recommender(max_n=10, state_type='space')
-    for _ in range(model.max_N):
-        s, pred, probs = model.step()
-        print(f'Input:  {s}           '
-              f'Predicted action: {pred}  ({[100 * p for p in probs]}% probability)')
-        a = int(input('Action: '))
-        model.train(a)

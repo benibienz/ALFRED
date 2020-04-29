@@ -9,14 +9,13 @@ home_path = Path(__file__).parent
 
 def reset():
     """ New models, clear everything """
-    # clear images
+    # clear decision tree graph
     tree_img = home_path.joinpath('static', 'images', 'tree_graph.png')
     if os.path.isfile(tree_img):
         os.remove(tree_img)
 
-    # init models
-    session['models'] = {'simple': Recommender(state_type='simple'),
-                         'space': Recommender(state_type='space')}
+    # init models (currently just space)
+    session['models'] = {'space': Recommender(state_type='space')}
 
 
 def format_space_state(state):
@@ -43,6 +42,11 @@ def format_probs(probs):
 
 @bp.route('/', methods=['GET'])
 def landing():
+    """
+    Landing page. Resets the models and tells the user about
+    the demo. Several environment pages could be chosen from here,
+    but currently we are just implementing one: space.
+    """
     reset()
     return render_template('gui/landing.html')
 
@@ -51,16 +55,15 @@ def landing():
 def main(env):
     """
     The view for the main app.
+    Currently only one environment (space) is supported,
+    but other environments could be easily implemented.
+
     Args:
-        env: 'space' or 'simple' (just space for now)
+        env: 'space' is the only valid argument currently
     """
     reset()
-    if env == 'space':
-        m = session['models']['space']
-        template = 'gui/space.html'
-    else:
-        m = session['models']['simple']
-        template = 'gui/simple.html'
+    m = session['models'][f'{env}']
+    template = f'gui/{env}.html'
 
     s, pred_a, probs = m.step()
     return render_template(template, env=env, state=s, actions=ACTION_KEYS)
@@ -68,7 +71,7 @@ def main(env):
 
 @bp.route('/act', methods=['POST'])
 def act():
-    """ Action endpoint """
+    """ REST endpoint for logging an action """
     # get action from request and train model
     action = request.form['action']
     env = request.form['env']

@@ -9,11 +9,11 @@ SSA involves receiving data about orbital objects from a network of sensors and 
 ALFRED has three components:
 * Simple, user-friendly UI
 * Data log
-* Machine learning system
+* Machine learning model
 
 These components are designed to be flexible and largely domain-agnostic; in principle they should handle and display arbitrary input states and action choices.
 
-This demo is built using flask with a vanilla CSS/HTML/JS frontend. The recommender system (`core/recommender.py`) uses the Gaussian Naive Bayes and Decision Tree classifiers from sklearn. While earlier versions of this demo implemented an SQL database for action logging, this feature was taken out to keep things simple as data logging is not the focus of this demo. Instead, data is kept in python objects which are serialized using flask-session.
+This demo is built using flask with a vanilla CSS/HTML/JS frontend. The machine learning model (`core/recommender.py`) uses the Gaussian Naive Bayes and Decision Tree classifiers from sklearn. While earlier versions of this demo implemented an SQL database for action logging, this feature was taken out to keep things simple as data logging is not the focus of this demo. Instead, data is kept in python objects which are serialized using flask-session.
 
 
 ##How to run
