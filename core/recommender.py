@@ -12,9 +12,8 @@ warnings.filterwarnings('ignore')  # sklearn is annoying with warnings
 # Space state parameters
 ID_LIST = ['US', 'RUS', 'EU', 'UNKNOWN']
 OBJECT_TYPE_LIST = ['DEBRIS', 'SATELLITE', 'UNKNOWN']
-STATE_KEYS = ['ID', 'Object type', 'Velocity deviation', 'Latitude', 'Longitude',
-              'Missed pass count']
-STATE_KEYS += ['Year first seen']
+STATE_KEYS = ['ID', 'Object type', 'Velocity deviation', 'X position', 'Y position',
+              'Z position', 'Missed pass count']
 ACTION_KEYS = ['No Action', 'Track Object', 'Alert']
 
 
@@ -60,10 +59,10 @@ def gen_space_state():
         s_id,
         s_type,
         StateVar('Velocity deviation', abs(rand.normal())),
-        StateVar('Latitude', rand.uniform(35, 45)),
-        StateVar('Longitude', rand.uniform(100, 120)),
+        StateVar('X position', rand.uniform(35, 45)),
+        StateVar('Y position', rand.uniform(100, 120)),
+        StateVar('Z position', rand.uniform(1000, 1200)),
         StateVar('Missed pass count', rand.choice([0, 1, 2], p=[0.6, 0.3, 0.1]), kind='int'),
-        StateVar('Year first seen', rand.randint(1980, 2020), kind='int'),
     ]
     return s
 
