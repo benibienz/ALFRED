@@ -94,8 +94,13 @@ class Recommender:
     Call step() to randomly generate next state and train(action) to
     log action and train model.
     """
-    def __init__(self, state_type='space', clf_type='', max_n=1000):
-
+    def __init__(self, state_type='space', clf_type='naive bayes', max_n=1000):
+        """
+        Args:
+            state_type: 'space' only
+            clf_type: if 'tree', uses Decision Tree classifier
+            max_n: maximum number of steps
+        """
         self.state_type = state_type
         if state_type == 'space':
             self.state_generator = gen_space_state

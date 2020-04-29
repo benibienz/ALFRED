@@ -75,10 +75,10 @@ def act():
     # get action from request and train model
     action = request.form['action']
     env = request.form['env']
-    m = session['models']['space'] if env == 'space' else session['models']['simple']
+    m = session['models'][f'{env}']
     m.train(action)
 
     # step to next state and return state vector and recommended action
     s, pred_a, probs = m.step()
-    state_txt = format_space_state(s) if env == 'space' else s
+    state_txt = format_space_state(s)
     return jsonify({'state': state_txt, 'pred_action': pred_a, 'probs': format_probs(probs)})
